@@ -1,4 +1,3 @@
-import mysql.connector
 from mysql.connector import Error
 from database import Database
 
@@ -89,7 +88,6 @@ class DAO:
         try:
             cursor = self.db.connection.cursor()
 
-            # Obtener el último ID de cuentas para calcular el nuevo ID
             cursor.execute("SELECT MAX(id) FROM Cuentas_bancarias")
             max_id = cursor.fetchone()[0]
             nuevo_id = 1 if max_id is None else max_id + 1

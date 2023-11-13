@@ -38,7 +38,7 @@ class Banco:
         nuevo_numero = nuevo_id * 87
         nueva_cuenta = CuentaBancaria(nuevo_id, titular, tipo, nuevo_numero, saldo)
         self.cuentas.append(nueva_cuenta)
-        print(f"Se creó una nueva cuenta con ID {nuevo_id}.")
+        print(f"✓ Se creó una nueva cuenta con ID {nuevo_id}.")
 
     def ingresar_dinero(self, id_cuenta, monto):
         cuenta = self.buscar_cuenta_por_id(id_cuenta)
@@ -74,7 +74,7 @@ class Banco:
         cuenta = self.buscar_cuenta_por_id(id_cuenta)
         if cuenta:
             self.cuentas.remove(cuenta)
-            print(f"Se eliminó la cuenta con ID {id_cuenta}.")
+            print(f"✘ Se eliminó la cuenta con ID {id_cuenta}.")
         else:
             print(f"No se encontró la cuenta con ID {id_cuenta}.")
 

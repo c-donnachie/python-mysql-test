@@ -1,7 +1,7 @@
 import mysql.connector
-import hashlib
-import os
+from mysql.connector import Error
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -29,14 +29,19 @@ class Database:
         else:
             self.cursor.execute(query)
         self.connection.commit()
-        return self.cursor
 
     def fetch_one(self, query, values=None):
-        self.execute_query(query, values)
+        if values:
+            self.cursor.execute(query, values)
+        else:
+            self.cursor.execute(query)
         return self.cursor.fetchone()
 
     def fetch_all(self, query, values=None):
-        self.execute_query(query, values)
+        if values:
+            self.cursor.execute(query, values)
+        else:
+            self.cursor.execute(query)
         return self.cursor.fetchall()
 
     def close(self):
