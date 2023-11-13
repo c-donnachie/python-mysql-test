@@ -1,14 +1,14 @@
-# main.py
 from clase import Banco
 from BD.conn import DAO
 from decimal import Decimal
-from user import User, Database
+from user import User
 import os
-from termcolor import colored
+from termcolor import colored  # colores en consola
+from getpass import getpass  # password oculta
 
 contador = False
 username = ""
-escribir = ">>"
+escribir = colored(">>", "yellow", attrs=["bold"])
 
 
 def limpiarContar():
@@ -22,6 +22,7 @@ def printMenuPrincipal():
         colored(
             "╔════════════════ ** MENÚ PRINCIPAL ** ════════════════╗",
             "light_magenta",
+            attrs=["bold"],
         )
     )
     print(colored(f"║ Usuario: {username}", "light_magenta"))
@@ -47,15 +48,11 @@ def printMenuPrincipal():
 
 
 def printMenuLogin():
-    print(
-        colored(
-            "╔════════════ LOGIN  ════════════╗",
-            "light_green",
-        )
-    )
+    print(colored("╔════════════ LOGIN  ════════════╗", "light_green", attrs=["bold"]))
     print(colored("║", "light_green"))
     print(colored("║", "light_green") + colored(" 1.- Iniciar sesión", "green"))
     print(colored("║", "light_green") + colored(" 2.- Registrarse", "green"))
+    print(colored("║", "light_green") + colored(" 0.- Salir", "green"))
     print(colored("║", "light_green"))
     print(
         colored(
@@ -95,16 +92,25 @@ def login():
 
         if choice == "1":
             global username
-            username = input("Nombre de usuario: ")
-            password = input("Contraseña: ")
+            username = input(f"Nombre de usuario {escribir} ")
+            password = getpass(f"Contraseña {escribir} ")
 
             user = User(username, password)
             user_id = user.authenticate()
             if user_id:
-                print(f"Inicio de sesión exitoso. Usuario ID: {user_id}")
+                print(
+                    colored(
+                        f"Inicio de sesión exitoso. Usuario ID: {user_id}", "dark_grey"
+                    )
+                )
                 return True
             else:
-                print("Inicio de sesión fallido. Usuario o contraseña incorrectos.")
+                print(
+                    colored(
+                        "Inicio de sesión fallido. Usuario o contraseña incorrectos.",
+                        "dark_grey",
+                    )
+                )
 
         elif choice == "2":
             username = input(f"Nombre de usuario {escribir} ")
@@ -112,10 +118,15 @@ def login():
 
             new_user = User(username, password)
             new_user.save_to_db()
-            print("Usuario registrado exitosamente.")
+            print(colored("Usuario registrado exitosamente.", "dark_grey"))
             return True
 
-        print("Opción no válida. Intente de nuevo.")
+        elif choice == "0":
+            limpiar_consola()
+            print("Hasta pronto!")
+            return False
+
+        print(colored("Opción no válida. Intente de nuevo.", "dark_grey"))
         input("Presione Enter para continuar...")
 
 
@@ -126,16 +137,21 @@ def ejecutar_opcion(opcion):
     elif opcion == 2:
         limpiarContar()
         banco.listar_cuentas()
-        id_cuenta = int(input("Ingrese el ID de la cuenta: "))
-        monto = Decimal(input("Ingrese la cantidad a depositar: "))
+        id_cuenta = int(input(f"Ingrese el ID de la cuenta {escribir} "))
+        monto = Decimal(input(f"Ingrese la cantidad a depositar {escribir} "))
         limpiarContar()
         if banco.ingresar_dinero(id_cuenta, monto):
             dao.ingresar_dinero(id_cuenta, monto)
     elif opcion == 3:
         limpiarContar()
         banco.listar_cuentas()
-        id_cuenta = int(input(f"Ingrese el ID de la cuenta {escribir} "))
-        monto = Decimal(input(f"Ingrese la cantidad a retirar {escribir} "))
+        while True:
+            try:
+                id_cuenta = int(input(f"Ingrese el ID de la cuenta {escribir} "))
+                monto = Decimal(input(f"Ingrese la cantidad a retirar {escribir} "))
+                break
+            except:
+                pass
         limpiarContar()
         if banco.retirar_dinero(id_cuenta, monto):
             dao.retirar_dinero(id_cuenta, monto)
@@ -151,6 +167,7 @@ def ejecutar_opcion(opcion):
         print("Tipos de cuenta:")
         print("1. Cuenta Vista")
         print("2. Cuenta Corriente")
+        print("3. Cuenta de Ahorro")
         while True:
             tipo = input(f"Ingrese el tipo de cuenta {escribir} ")
             if tipo == "1":
@@ -158,6 +175,9 @@ def ejecutar_opcion(opcion):
                 break
             elif tipo == "2":
                 tipo = "Cuenta Corriente"
+                break
+            elif tipo == "3":
+                tipo = "Cuenta de Ahorro"
                 break
             else:
                 print("Opcion invalida!")
@@ -182,7 +202,11 @@ def menu_principal():
                 elif opcion == 0:
                     continuar = False
                     limpiar_consola()
-                    print("¡Gracias por usar la aplicación del banco!")
+                    print(
+                        colored(
+                            "¡Gracias por usar la aplicación del banco!", "dark_grey"
+                        )
+                    )
                     break
                 else:
                     opcion_correcta = True

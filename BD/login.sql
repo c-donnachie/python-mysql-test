@@ -7,3 +7,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
+
+INSERT INTO Usuarios (usuario, password) VALUES
+('usuario1', MD5('password1')),
+('usuario2', MD5('password2'))
+;

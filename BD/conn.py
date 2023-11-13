@@ -1,5 +1,6 @@
 from mysql.connector import Error
 from database import Database
+from termcolor import colored
 
 
 class DAO:
@@ -48,7 +49,7 @@ class DAO:
                 sql = "UPDATE Cuentas_bancarias SET Saldo = Saldo + %s WHERE ID = %s"
                 cursor.execute(sql, (monto, id_cuenta))
                 self.db.connection.commit()
-                print("¡Dinero ingresado a la cuenta!\n")
+                print(colored("¡Dinero ingresado a la cuenta!\n", "light_cyan"))
             except Error as ex:
                 print("Error al intentar ingresar dinero a la cuenta: {0}".format(ex))
             finally:
@@ -62,7 +63,7 @@ class DAO:
                 sql = "UPDATE Cuentas_bancarias SET Saldo = Saldo - %s WHERE ID = %s"
                 cursor.execute(sql, (monto, id_cuenta))
                 self.db.connection.commit()
-                print("¡Dinero retirado a la cuenta!\n")
+                print(colored("¡Dinero retirado a la cuenta!\n", "light_cyan"))
             except Error as ex:
                 print("Error al intentar retirar dinero a la cuenta: {0}".format(ex))
             finally:
@@ -76,7 +77,7 @@ class DAO:
                 sql = "DELETE FROM Cuentas_bancarias WHERE ID = {0}"
                 cursor.execute(sql.format(id_cuenta))
                 self.db.connection.commit()
-                print("¡Cuenta eliminada!\n")
+                print(colored("¡Cuenta eliminada!\n", "light_cyan"))
             except Error as error:
                 print("Fallo al intentar eliminar cuenta: {}".format(error))
                 self.db.connection.rollback()
@@ -99,7 +100,10 @@ class DAO:
             cursor.execute(sql, values)
             self.db.connection.commit()
             print(
-                f"Se creó una nueva cuenta con ID {nuevo_id} y número {nuevo_numero}."
+                colored(
+                    f"Se creó una nueva cuenta con ID {nuevo_id} y número {nuevo_numero}.",
+                    "light_cyan",
+                )
             )
         except Error as ex:
             print("Error al intentar crear la cuenta: {0}".format(ex))

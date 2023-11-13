@@ -1,4 +1,5 @@
 from decimal import Decimal
+from termcolor import colored
 
 
 class CuentaBancaria:
@@ -28,28 +29,48 @@ class Banco:
         self.cuentas.append(nueva_cuenta)
 
     def listar_cuentas(self):
+        print(
+            colored(
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "light_blue",
+                attrs=["blink"],
+            )
+        )
         for cuenta in self.cuentas:
             print(
                 f"ID: {cuenta.id}, Titular: {cuenta.titular}, Tipo: {cuenta.tipo}, Numero: {cuenta.numero} , Saldo: {cuenta.saldo}"
             )
+
+        print(
+            colored(
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "light_blue",
+                attrs=["blink"],
+            )
+        )
 
     def crear_cuenta(self, titular, tipo, saldo):
         nuevo_id = len(self.cuentas) + 1
         nuevo_numero = nuevo_id * 87
         nueva_cuenta = CuentaBancaria(nuevo_id, titular, tipo, nuevo_numero, saldo)
         self.cuentas.append(nueva_cuenta)
-        print(f"✓ Se creó una nueva cuenta con ID {nuevo_id}.")
+        print(colored(f"✓ Se creó una nueva cuenta con ID {nuevo_id}.", "light_cyan"))
 
     def ingresar_dinero(self, id_cuenta, monto):
         cuenta = self.buscar_cuenta_por_id(id_cuenta)
         if cuenta:
             cuenta.saldo += Decimal(str(monto))
             print(
-                f"Se ingresaron {monto} a la cuenta {cuenta.id}. Nuevo saldo: {cuenta.saldo}"
+                colored(
+                    f"Se ingresaron {monto} a la cuenta {cuenta.id}. Nuevo saldo: {cuenta.saldo}",
+                    "light_cyan",
+                )
             )
             return True
         else:
-            print(f"No se encontró la cuenta con ID {id_cuenta}.")
+            print(
+                colored(f"No se encontró la cuenta con ID {id_cuenta}.", "light_cyan")
+            )
             return False
 
     def retirar_dinero(self, id_cuenta, monto):
@@ -58,12 +79,18 @@ class Banco:
             if cuenta.saldo >= monto:
                 cuenta.saldo -= Decimal(str(monto))
                 print(
-                    f"Se retiraron {monto} de la cuenta {cuenta.id}. Nuevo saldo: {cuenta.saldo}"
+                    colored(
+                        f"Se retiraron {monto} de la cuenta {cuenta.id}. Nuevo saldo: {cuenta.saldo}",
+                        "light_cyan",
+                    )
                 )
                 return True
             else:
                 print(
-                    "Saldo insuficiente. No se puede retirar más dinero del disponible."
+                    colored(
+                        "Saldo insuficiente. No se puede retirar más dinero del disponible.",
+                        "light_cyan",
+                    )
                 )
                 return False
         else:
@@ -74,9 +101,11 @@ class Banco:
         cuenta = self.buscar_cuenta_por_id(id_cuenta)
         if cuenta:
             self.cuentas.remove(cuenta)
-            print(f"✘ Se eliminó la cuenta con ID {id_cuenta}.")
+            print(colored(f"✘ Se eliminó la cuenta con ID {id_cuenta}.", "light_cyan"))
         else:
-            print(f"No se encontró la cuenta con ID {id_cuenta}.")
+            print(
+                colored(f"No se encontró la cuenta con ID {id_cuenta}.", "light_cyan")
+            )
 
 
 if __name__ == "__main__":
