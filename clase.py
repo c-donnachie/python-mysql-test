@@ -1,4 +1,4 @@
-import hashlib
+from decimal import Decimal
 
 
 class CuentaBancaria:
@@ -17,9 +17,15 @@ class Banco:
     def __init__(self):
         self.cuentas = []
 
-    def crear_cuenta1(self, cuenta):
-        self.cuentas.append(cuenta)
-        # print(f"Se creó una nueva cuenta con ID {cuenta.id}.")
+    def buscar_cuenta_por_id(self, id_cuenta):
+        for cuenta in self.cuentas:
+            if cuenta.id == id_cuenta:
+                return cuenta
+        return None
+
+    def inicializar_cuentas(self, id, titular, tipo, numero, saldo):
+        nueva_cuenta = CuentaBancaria(id, titular, tipo, numero, saldo)
+        self.cuentas.append(nueva_cuenta)
 
     def listar_cuentas(self):
         for cuenta in self.cuentas:
@@ -37,25 +43,32 @@ class Banco:
     def ingresar_dinero(self, id_cuenta, monto):
         cuenta = self.buscar_cuenta_por_id(id_cuenta)
         if cuenta:
-            cuenta.saldo += monto
+            cuenta.saldo += Decimal(str(monto))
             print(
                 f"Se ingresaron {monto} a la cuenta {cuenta.id}. Nuevo saldo: {cuenta.saldo}"
             )
+            return True
         else:
             print(f"No se encontró la cuenta con ID {id_cuenta}.")
+            return False
 
     def retirar_dinero(self, id_cuenta, monto):
         cuenta = self.buscar_cuenta_por_id(id_cuenta)
         if cuenta:
             if cuenta.saldo >= monto:
-                cuenta.saldo -= monto
+                cuenta.saldo -= Decimal(str(monto))
                 print(
                     f"Se retiraron {monto} de la cuenta {cuenta.id}. Nuevo saldo: {cuenta.saldo}"
                 )
+                return True
             else:
-                print("Saldo insuficiente.")
+                print(
+                    "Saldo insuficiente. No se puede retirar más dinero del disponible."
+                )
+                return False
         else:
             print(f"No se encontró la cuenta con ID {id_cuenta}.")
+            return False
 
     def eliminar_cuenta(self, id_cuenta):
         cuenta = self.buscar_cuenta_por_id(id_cuenta)
